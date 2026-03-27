@@ -6,29 +6,39 @@ screen = pg.display.set_mode((1280, 720))
 clock = pg.time.Clock()
 
 SPEED = 5
+GRAVITY = 2
+JUMP_FORCE = 10
 
 
 class Player:
     def __init__(self, x, y):
         self.pos = pg.Vector2(x, y)
         self.vel = pg.Vector2(0, 0)
+        self.rect = pg.Rect(x, y, 40, 40)
 
     def handle_input(self, events):
         self.vel = pg.Vector2(0, 0)
         keys = pg.key.get_pressed()
         if keys[pg.K_w]:
-            self.vel.y -= 1.0
-        if keys[pg.K_s]:
-            self.vel.y += 1.0
+            self.vel.y -= JUMP_FORCE
         if keys[pg.K_a]:
-            self.vel.x -= 1.0
+            self.vel.x -= SPEED
         if keys[pg.K_d]:
-            self.vel.x += 1.0
+            self.vel.x += SPEED
+
+        for event in events:
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_w:
+                    self.vel.y = JUMP_FORCE
 
     def update(self):
-        if self.vel.length() > 0:
-            self.vel = self.vel.normalize() * SPEED
+        self.vel.y += GRAVITY
         self.pos += self.vel
+
+    def _resolve_collisions(self, platforms):
+        for plat in platforms:
+            if self.rect.colliderect(plat):
+                self.rect.bottom
 
     def draw(self, screen):
         pg.draw.circle(screen, "red", self.pos, 40)
@@ -59,4 +69,3 @@ while True:
     screen.fill("purple")
     player.draw(screen)
     pg.display.flip()
-
