@@ -2,6 +2,8 @@ import pygame as pg
 import sys
 
 pg.init()
+pg.font.init()
+font = pg.font.SysFont('monospace', 20)
 screen = pg.display.set_mode((1280, 720))
 clock = pg.time.Clock()
 
@@ -31,6 +33,7 @@ class Player:
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_SPACE and self.on_ground:
                     self.vel.y = JUMP_FORCE
+                    self.on_ground = False
 
     def update(self):
         self.vel.y += GRAVITY
@@ -75,6 +78,8 @@ while True:
 
     # ---- Draw ----
     screen.fill("purple")
+    text = font.render(f'on_ground: {player.on_ground}', False, "red")
+    screen.blit(text, (1, 1))
     player.draw(screen)
     for plat in platforms:
         pg.draw.rect(screen, "white", plat)
