@@ -15,6 +15,7 @@ JUMP_FORCE = -10
 class Player:
     def __init__(self, x, y):
         self.on_ground = False
+        self.want_jump = False
         self.pos = pg.Vector2(x, y)
         self.vel = pg.Vector2(0, 0)
         self.rect = pg.Rect(x, y, 40, 60)
@@ -31,9 +32,8 @@ class Player:
         # ---- Discrete inputs ----
         for event in events:
             if event.type == pg.KEYDOWN:
-                if event.key == pg.K_SPACE and self.on_ground:
-                    self.vel.y = JUMP_FORCE
-                    self.on_ground = False
+                if event.key == pg.K_SPACE:
+                    self.want_jump = True
 
     def update(self):
         self.vel.y += GRAVITY
@@ -41,6 +41,12 @@ class Player:
         self.rect.topleft = (int(self.pos.x), int(self.pos.y))
 
         self._resolve_collisions(platforms)
+
+        if self.want_jump and self.on_ground:
+            self.vel.y = JUMP_FORCE
+            self.on_ground = False
+
+        self.want_jump = False
 
     def _resolve_collisions(self, platforms):
         for plat in platforms:
