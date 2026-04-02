@@ -7,6 +7,3 @@ class Player(pg.sprite.Sprite):
         self.image = pg.Surface((40, 40))
         self.image.fill('red')
         self.rect = self.image.get_rect(center=pos)
-
-    def draw(self, surface):
-        surface.blit(surface, self.image)

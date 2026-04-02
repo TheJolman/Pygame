@@ -22,3 +22,4 @@ while True:
 
     screen.fill("blue")
     all_sprites.draw(screen)
+    pg.display.flip()
